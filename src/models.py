@@ -1,6 +1,6 @@
 import os
 import sys
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, Date
 from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy import create_engine
 from eralchemy2 import render_er
@@ -8,13 +8,13 @@ from eralchemy2 import render_er
 
 Base = declarative_base()
 
-class Person(Base):
-    __tablename__ = 'person'
+class Character(Base):
+    __tablename__ = 'Characters'
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
     birth_year = Column(Date, nullable=False)
     eye_color = Column(String(10))
-    homeworld = Column(String(50), ForeignKey(Planet.name))
+    homeworld = Column(String(50), ForeignKey('planets.id'))
     created = Column(String(50))
     edited = Column(String(50))
     gender = Column(String(20))
@@ -22,7 +22,7 @@ class Person(Base):
     height = Column(Integer)
     mass = Column(Integer)
     skin_color = Column(String(20))
-,   url = Column(String(100))
+    url = Column(String(100))
 
     def to_dict(self):
         return {}
@@ -30,7 +30,7 @@ class Person(Base):
 
 
 class Planet(Base):
-    __tablename__ = 'planet'
+    __tablename__ = 'planets'
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
     climate = Column(String(50))
@@ -49,8 +49,8 @@ class Planet(Base):
     def to_dict(self):
         return {}
 
-    class User(Base):
-    __tablename__ = 'user'
+class User(Base):
+    __tablename__ = 'users'
     id = Column(Integer, primary_key=True)
     username = Column(String(50), unique=True, nullable=False)
     email = Column(String(100), unique=True, nullable=False)
@@ -59,15 +59,15 @@ class Planet(Base):
     def to_dict(self):
         return {}
 
-class Favorites(Base):
+class Favorite(Base):
     __tablename__ = 'favorites'
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey(User.id))
+    user_id = Column(Integer, ForeignKey("users.id"))
     name = Column(String(50))
-    planet_name = Column(String(50), ForeignKey(Planet.name))
-    person_name = Column(String(50), ForeignKey(Person.name))
+    
     
     def to_dict(self):
         return {}
+        
 ## Draw from SQLAlchemy base
 render_er(Base, 'diagram.png')
